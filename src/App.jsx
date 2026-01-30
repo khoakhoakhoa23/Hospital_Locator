@@ -42,10 +42,11 @@ function App() {
               <Route path="/hospital/:id" element={<HospitalDetailPage />} />
             </Routes>
           </Container>
-    </div>
+        </div>
       </Router>
     </ThemeProvider>
   );
 }
 
 export default App;
+
