@@ -1,0 +1,13 @@
+# Django Backend Dependencies
+Django>=5.2.10
+djangorestframework>=3.16.1
+djangorestframework-gis>=1.0.0
+django-filter>=25.2
+django-leaflet>=0.33.0
+psycopg2-binary>=2.9.11
+Pillow>=10.0.0
+django-cors-headers>=4.3.0
+
+# GIS Dependencies (requires GDAL installed on system)
+# django.contrib.gis comes with Django
+
