@@ -45,7 +45,7 @@ const HospitalsPage = () => {
   // GIS: Filter hospitals when search changes
   useEffect(() => {
     filterHospitals();
-  });
+  }, [hospitals, searchFilters]); // FIX: Added dependency array to prevent infinite loop
 
   const loadHospitals = async () => {
     try {
@@ -53,7 +53,9 @@ const HospitalsPage = () => {
       setError(null);
 
       const response = await hospitalAPI.getHospitals();
-      setHospitals(response.data);
+      // Handle paginated response
+      const data = response.data;
+      setHospitals(data.results || data || []);
     } catch (err) {
       console.error('GIS Load hospitals error:', err);
       setError('Không thể tải danh sách bệnh viện.');
@@ -63,13 +65,13 @@ const HospitalsPage = () => {
   };
 
   const filterHospitals = () => {
-    let filtered = [...hospitals];
+    let filtered = [...(hospitals || [])];
 
-    // GIS: Text search
+    // GIS: Text search - FIX: Added optional chaining
     if (searchFilters.query) {
       filtered = filtered.filter(hospital =>
-        hospital.name.toLowerCase().includes(searchFilters.query.toLowerCase()) ||
-        hospital.address.toLowerCase().includes(searchFilters.query.toLowerCase())
+        hospital.name?.toLowerCase().includes(searchFilters.query.toLowerCase()) ||
+        hospital.address?.toLowerCase().includes(searchFilters.query.toLowerCase())
       );
     }
 

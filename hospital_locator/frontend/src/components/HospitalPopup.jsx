@@ -22,7 +22,8 @@ import {
   Facebook as FacebookIcon,
   LocalHospital as HospitalIcon,
   Schedule as ScheduleIcon,
-  Directions as DirectionsIcon
+  Directions as DirectionsIcon,
+  LocationOn as LocationIcon
 } from '@mui/icons-material';
 
 const HospitalPopup = ({ hospital, open, onClose, onGetDirections }) => {
@@ -259,7 +260,7 @@ const HospitalPopup = ({ hospital, open, onClose, onGetDirections }) => {
             )}
           </Grid>
 
-          {/* GIS: Map Preview */}
+          {/* GIS: Interactive Map */}
           <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
@@ -267,26 +268,68 @@ const HospitalPopup = ({ hospital, open, onClose, onGetDirections }) => {
                   🗺️ Vị trí trên bản đồ
                 </Typography>
 
-                <Box
-                  sx={{
-                    height: 200,
-                    bgcolor: '#f5f5f5',
-                    borderRadius: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid #e0e0e0'
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary" align="center">
-                    Tọa độ: {hospital.latitude?.toFixed(4)}, {hospital.longitude?.toFixed(4)}
-                    <br />
-                    <small>WGS84 Coordinate System</small>
-                  </Typography>
-                </Box>
+                {hospital.latitude && hospital.longitude ? (
+                  <Box sx={{ mb: 2 }}>
+                    <Box
+                      sx={{
+                        height: 250,
+                        borderRadius: 1,
+                        overflow: 'hidden',
+                        border: '1px solid #e0e0e0'
+                      }}
+                    >
+                      <iframe
+                        src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d${Math.round(Math.random() * 100000)}!2d${hospital.longitude}!3d${hospital.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsNDcuNTI1OSJTIDEwNsKwMzcuMjU5MSJTIEtvdGhh!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`Bản đồ ${hospital.name}`}
+                      />
+                    </Box>
+                    
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                      📍 {hospital.latitude?.toFixed(6)}, {hospital.longitude?.toFixed(6)}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      height: 250,
+                      bgcolor: '#f5f5f5',
+                      borderRadius: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  >
+                    <Typography variant="body2" color="text.secondary" align="center">
+                      Chưa có thông tin tọa độ
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* View on Google Maps Button */}
+                {hospital.latitude && hospital.longitude && (
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    startIcon={<LocationIcon />}
+                  >
+                    🚀 Chỉ đường đến đây
+                  </Button>
+                )}
 
                 <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  * Click "Chỉ đường" để xem trên bản đồ đầy đủ
+                  * Click để mở Google Maps và chỉ đường
                 </Typography>
               </CardContent>
             </Card>
@@ -310,8 +353,7 @@ const HospitalPopup = ({ hospital, open, onClose, onGetDirections }) => {
         {hospital.latitude && hospital.longitude && (
           <Button
             onClick={() => {
-              if (onClose) onClose();
-              onClose();
+              if (onClose) onClose();  // FIX: Only call once
               if (onGetDirections) {
                 onGetDirections(hospital);
               }

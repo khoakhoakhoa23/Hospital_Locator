@@ -28,6 +28,21 @@ class HospitalViewSet(viewsets.ModelViewSet):
             return HospitalListSerializer
         return HospitalSerializer
 
+    def create(self, request, *args, **kwargs):
+        """Tạo bệnh viện mới từ React Admin"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {'message': 'Thêm bệnh viện thành công!', 'data': serializer.data},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+    def perform_create(self, serializer):
+        serializer.save()
+
     @action(detail=False, methods=['get'])
     def search(self, request):
         """API tìm kiếm nâng cao - dùng GET để tránh CSRF"""
@@ -308,3 +323,11 @@ class HospitalViewSet(viewsets.ModelViewSet):
 
 # Template views removed - using React frontend
 # Django now serves only REST APIs for GIS data
+
+
+from django.shortcuts import redirect
+
+
+def home_view(request):
+    """Redirect to frontend application"""
+    return redirect('http://localhost:3000')

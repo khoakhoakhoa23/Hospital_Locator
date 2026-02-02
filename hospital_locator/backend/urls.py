@@ -26,4 +26,5 @@ router.register(r'hospitals', views.HospitalViewSet, basename='hospital')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('', views.home_view, name='home'),
 ]

@@ -9,6 +9,7 @@ import Header from './components/Header';
 import MapPage from './pages/MapPage';
 import HospitalsPage from './pages/HospitalsPage';
 import HospitalDetailPage from './pages/HospitalDetailPage';
+import AdminPage from './pages/AdminPage';
 
 // GIS Theme
 const theme = createTheme({
@@ -35,13 +36,24 @@ function App() {
       <Router>
         <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
           <Header />
-          <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
-            <Routes>
-              <Route path="/" element={<MapPage />} />
-              <Route path="/hospitals" element={<HospitalsPage />} />
-              <Route path="/hospital/:id" element={<HospitalDetailPage />} />
-            </Routes>
-          </Container>
+          <Routes>
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/" element={
+              <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+                <MapPage />
+              </Container>
+            } />
+            <Route path="/hospitals" element={
+              <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+                <HospitalsPage />
+              </Container>
+            } />
+            <Route path="/hospital/:id" element={
+              <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+                <HospitalDetailPage />
+              </Container>
+            } />
+          </Routes>
         </div>
       </Router>
     </ThemeProvider>
@@ -49,4 +61,3 @@ function App() {
 }
 
 export default App;
-

@@ -56,8 +56,9 @@ const HospitalDetailPage = () => {
         const relatedResponse = await hospitalAPI.getHospitals({
           district: response.data.district
         });
-        // Filter out current hospital
-        const related = relatedResponse.data.filter(h => h.id !== parseInt(id)).slice(0, 6);
+        // Handle paginated response - FIX: Check for results array
+        const relatedData = relatedResponse.data.results || relatedResponse.data || [];
+        const related = relatedData.filter(h => h.id !== parseInt(id)).slice(0, 6);
         setRelatedHospitals(related);
       }
 
@@ -344,45 +345,70 @@ const HospitalDetailPage = () => {
 
         {/* GIS Sidebar */}
         <Grid item xs={12} lg={4}>
-          {/* GIS Map Preview */}
+          {/* GIS Interactive Map */}
           <Card sx={{ mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 🗺️ Vị trí trên bản đồ
               </Typography>
 
-              <Box
-                sx={{
-                  height: 200,
-                  bgcolor: '#f5f5f5',
-                  borderRadius: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid #e0e0e0',
-                  p: 2
-                }}
-              >
-                <LocationIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-                <Typography variant="body2" align="center" color="text.secondary">
-                  Tọa độ GPS (WGS84):
-                  <br />
-                  <strong>{hospital.latitude?.toFixed(6)}</strong>,
-                  <strong>{hospital.longitude?.toFixed(6)}</strong>
-                </Typography>
-              </Box>
+              {hospital.latitude && hospital.longitude ? (
+                <Box>
+                  <Box
+                    sx={{
+                      height: 250,
+                      borderRadius: 1,
+                      overflow: 'hidden',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  >
+                    <iframe
+                      src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d${Math.round(Math.random() * 100000)}!2d${hospital.longitude}!3d${hospital.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDQcuNTI1OSJTIDEwNsKwMzcuMjU5MSJTIEtvdGhh!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`Bản đồ ${hospital.name}`}
+                    />
+                  </Box>
+                  
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    📍 {hospital.latitude?.toFixed(6)}, {hospital.longitude?.toFixed(6)}
+                  </Typography>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    height: 250,
+                    bgcolor: '#f5f5f5',
+                    borderRadius: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #e0e0e0'
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary" align="center">
+                    Chưa có thông tin tọa độ
+                  </Typography>
+                </Box>
+              )}
 
-              <Button
-                href={getDirectionsUrl(hospital)}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outlined"
-                fullWidth
-                sx={{ mt: 1 }}
-              >
-                Xem trên bản đồ
-              </Button>
+              {hospital.latitude && hospital.longitude && (
+                <Button
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="contained"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                  startIcon={<LocationIcon />}
+                >
+                  🚀 Chỉ đường đến đây
+                </Button>
+              )}
             </CardContent>
           </Card>
 

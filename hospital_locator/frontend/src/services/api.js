@@ -20,6 +20,9 @@ export const hospitalAPI = {
   // Lấy tất cả bệnh viện
   getHospitals: (params = {}) => api.get('/hospitals/', { params }),
 
+  // Tạo bệnh viện mới
+  createHospital: (data) => api.post('/hospitals/', data),
+
   // Lấy chi tiết bệnh viện
   getHospital: (id) => api.get(`/hospitals/${id}/`),
 

@@ -69,19 +69,22 @@ const Header = () => {
           ))}
 
           {/* Admin Link */}
-          <IconButton
+          <Button
+            component={Link}
+            to="/admin"
             color="inherit"
-            href="http://127.0.0.1:8000/admin/"
-            target="_blank"
+            startIcon={!isMobile ? <AdminIcon /> : null}
+            variant={location.pathname === '/admin' ? 'outlined' : 'text'}
             sx={{
               color: 'white',
+              borderColor: 'white',
               '&:hover': {
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
               }
             }}
           >
-            <AdminIcon />
-          </IconButton>
+            {isMobile ? <AdminIcon /> : 'Admin'}
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

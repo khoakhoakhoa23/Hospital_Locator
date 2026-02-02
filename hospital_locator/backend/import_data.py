@@ -973,8 +973,8 @@ hospitals_data = [
         'main_specialty': 'dermatology',
         'specialties': ['dermatology', 'laser', 'aesthetic'],
         'emergency_services': False,
-        'latitude': 10.7920,
-        'longitude': 106.6520,
+        'latitude': 10.7949,
+        'longitude': 106.6525,
         'district': 'tanbinh',
         'working_hours': '07:30-17:00'
     },
@@ -1558,6 +1558,8 @@ hospitals_data = [
 
 def import_hospitals():
     """Import du lieu benh vien vao database"""
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
     
     # Xoa du lieu cu
     print("Dang xoa du lieu cu...")
